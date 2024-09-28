@@ -1,0 +1,98 @@
+class Member:
+    """Class to represent a gym member."""
+    def __init__(self, name):
+        self.name = name
+        self.attendance = []  # List to track attendance dates
+        self.billable_days = 0  # Number of days for billing
+
+    def add_attendance(self, date):
+        """Record attendance for the member."""
+        self.attendance.append(date)
+        self.billable_days += 1  # Increment billable days with each attendance
+
+    def get_bill(self, rate_per_day):
+        """Calculate bill based on attendance."""
+        return self.billable_days * rate_per_day
+
+
+class GymMembershipSystem:
+    """Class to manage gym memberships and billing."""
+    def __init__(self):
+        self.members = {}  # Dictionary to store members (name: Member object)
+
+    def add_member(self, name):
+        """Add a new member."""
+        if name not in self.members:
+            self.members[name] = Member(name)
+            print(f"Member '{name}' added successfully!")
+        else:
+            print(f"Member '{name}' already exists.")
+
+    def remove_member(self, name):
+        """Remove a member."""
+        if name in self.members:
+            del self.members[name]
+            print(f"Member '{name}' removed successfully!")
+        else:
+            print(f"Member '{name}' not found.")
+
+    def record_attendance(self, name, date):
+        """Record attendance for a member."""
+        if name in self.members:
+            self.members[name].add_attendance(date)
+            print(f"Attendance recorded for '{name}' on {date}.")
+        else:
+            print(f"Member '{name}' not found.")
+
+    def generate_billing_summary(self, name, rate_per_day):
+        """Generate billing summary for a member."""
+        if name in self.members:
+            bill = self.members[name].get_bill(rate_per_day)
+            print(f"Billing summary for '{name}': ${bill:.2f} for {self.members[name].billable_days} days attended.")
+        else:
+            print(f"Member '{name}' not found.")
+
+    def view_members(self):
+        """View all members."""
+        if self.members:
+            print("Current members:")
+            for member in self.members.values():
+                print(f"- {member.name}, Days attended: {member.billable_days}")
+        else:
+            print("No members found.")
+
+
+if __name__ == "__main__":
+    gym_system = GymMembershipSystem()
+
+    while True:
+        print("\n--- Gym Membership System ---")
+        print("1. Add Member")
+        print("2. Remove Member")
+        print("3. Record Attendance")
+        print("4. Generate Billing Summary")
+        print("5. View Members")
+        print("6. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            name = input("Enter member name: ")
+            gym_system.add_member(name)
+        elif choice == "2":
+            name = input("Enter member name to remove: ")
+            gym_system.remove_member(name)
+        elif choice == "3":
+            name = input("Enter member name to record attendance: ")
+            date = input("Enter date (DD-MM-YY): ")
+            gym_system.record_attendance(name, date)
+        elif choice == "4":
+            name = input("Enter member name for billing summary: ")
+            rate = float(input("Enter billing rate per day: "))
+            gym_system.generate_billing_summary(name, rate)
+        elif choice == "5":
+            gym_system.view_members()
+        elif choice == "6":
+            print("Exiting. Have a great day!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
